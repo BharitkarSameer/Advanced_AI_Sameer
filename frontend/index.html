@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bayesian network enumeration</title>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <p class="eyebrow">Discrete Bayesian networks</p>
+    <h1>From a word problem to P(query | evidence)</h1>
+    <p class="lede">Load the built-in example to query immediately. For a new word problem, a local Ollama model fills the tables. Enumeration computes the query from those tables.</p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="problem-heading">
+      <div class="panel-heading">
+        <span class="step">1</span>
+        <h2 id="problem-heading">Problem</h2>
+      </div>
+      <p class="hint">Use Rain example or Alarm example to load known tables with no model. Build network is only for a new problem, and it asks Ollama. The 7B coder model often gets CPT row counts wrong.</p>
+      <textarea id="problem" rows="14" spellcheck="false" placeholder="Describe the variables, their parents, and the probabilities."></textarea>
+      <div class="actions">
+        <button id="load-example" type="button" class="secondary">Rain example</button>
+        <button id="load-alarm" type="button" class="secondary">Alarm example</button>
+        <button id="build" type="button">Build network</button>
+      </div>
+      <p id="build-status" class="status" role="status"></p>
+      <div id="warnings" class="warnings" hidden></div>
+    </section>
+
+    <section id="network-panel" class="panel" hidden aria-labelledby="network-heading">
+      <div class="panel-heading">
+        <h2 id="network-heading">Network</h2>
+        <p id="order" class="order"></p>
+      </div>
+      <div class="network-grid">
+        <div>
+          <h3>Graph</h3>
+          <p class="hint">An arrow runs from a parent to its child.</p>
+          <div id="graph"></div>
+        </div>
+        <div>
+          <h3>Conditional probability tables</h3>
+          <div id="tables"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="query-heading">
+      <div class="panel-heading">
+        <span class="step">2</span>
+        <h2 id="query-heading">Query</h2>
+      </div>
+      <p class="hint">Use the names and values from the tables. A bare query variable returns the full distribution.</p>
+      <div class="query-row">
+        <label class="sr-only" for="query">Probability query</label>
+        <input id="query" type="text" disabled placeholder="P(Rain=T | WetGrass=T)" autocomplete="off" spellcheck="false">
+        <button id="ask" type="button" disabled>Solve</button>
+      </div>
+      <p id="query-status" class="status" role="status"></p>
+      <div id="answer" hidden></div>
+    </section>
+  </main>
+
+  <script src="/app.js?v=2"></script>
+</body>
+</html>
